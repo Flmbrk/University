@@ -4,6 +4,7 @@ import java.io.*;
 import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.HashSet;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -11,9 +12,9 @@ import java.util.stream.Collectors;
  * Created by flmbrk on 15.09.2016.
  */
 public class FileReaderService {
-    private ArrayList<String> words;
+    private HashSet<String> unique;
     private File file;
-
+    private ArrayList<String> words;
     public ArrayList<String> getWords(){
         return this.words;
     }
@@ -21,6 +22,7 @@ public class FileReaderService {
     public FileReaderService(String path){
         this.file = new File(path);
         words = new ArrayList<String>();
+        unique = new HashSet<String>();
     }
 
     public void readFromFile() throws IOException {
@@ -38,12 +40,13 @@ public class FileReaderService {
 
                     else {
 
-                        this.words.add(str.toString());
+                        this.unique.add(str.toString());
                         str = new StringBuilder(); // str.setLength(0) will work not so fast and use the same buffer, so we should just create new StringBuilder
                     }
                 }
                 stream.close();
                 reader.close();
+                this.words.addAll(unique);
                 deleteNulls();
             }
             catch(IOException ex) {
